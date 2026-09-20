@@ -29,7 +29,7 @@ writing it down.
 
 ## What to measure (and what to ignore)
 - Follows per 1,000 views. That is the only number that tells you the character is working as a series.
-  Mbok Geni: 7.8M views, 1,375 followers as of 20 Sep 2026 -> ~0.18 per 1,000. Views are fine, the
+  Mbok Geni: 11.6M views, 1,402 followers as of 20 Sep 2026 -> ~0.12 per 1,000. Views are fine, the
   outro card is doing nothing. Fix the CTA, not the content.
 - Completion rate on the first 3 seconds. If it is below 60 percent the hook is a talking still, not an
   event. Put the event first.
