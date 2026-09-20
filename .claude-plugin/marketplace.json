@@ -1,0 +1,18 @@
+{
+  "name": "ai-influencer-pro",
+  "description": "Run an AI influencer as a series, not a render: character sheet, lore, episode engine, Google Flow automation (Nano Banana + Omni/Veo), ffmpeg assembly, and platform warm-up.",
+  "version": "1.0.0",
+  "owner": { "name": "Hanif", "url": "https://github.com/buildwithhanif" },
+  "plugins": [
+    {
+      "name": "ai-influencer-pro",
+      "source": "./plugins/ai-influencer-pro",
+      "description": "Build and operate a recurring AI character on TikTok, Reels and Shorts. Locks the face, writes the lore, plans numbered episodes, drives Google Flow through the browser, stitches clips with ffmpeg, and warms up the account.",
+      "category": "content",
+      "keywords": ["ai influencer", "ai character", "google flow", "nano banana", "veo", "omni", "ffmpeg", "tiktok", "reels", "faceless"],
+      "license": "MIT",
+      "homepage": "https://github.com/buildwithhanif/ai-influencer-pro",
+      "repository": "https://github.com/buildwithhanif/ai-influencer-pro"
+    }
+  ]
+}

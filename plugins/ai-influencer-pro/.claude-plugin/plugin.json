@@ -1,0 +1,11 @@
+{
+  "name": "ai-influencer-pro",
+  "displayName": "AI Influencer Pro",
+  "description": "Build and operate a recurring AI character: character sheet, lore, episode engine, Google Flow browser automation (Nano Banana + Omni/Veo), ffmpeg assembly, platform warm-up.",
+  "version": "1.0.0",
+  "author": { "name": "Hanif", "url": "https://github.com/buildwithhanif" },
+  "homepage": "https://github.com/buildwithhanif/ai-influencer-pro",
+  "repository": "https://github.com/buildwithhanif/ai-influencer-pro",
+  "license": "MIT",
+  "keywords": ["ai influencer", "google flow", "nano banana", "veo", "omni", "ffmpeg", "tiktok", "reels"]
+}
