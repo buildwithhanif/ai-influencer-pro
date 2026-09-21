@@ -145,11 +145,13 @@ async function downloadAll(page, { kind, quality, out }) {
       for (const shot of plan.shots) {
         await setMode(page, { kind: 'video', model: plan.model, ratio: plan.ratio || '9:16', seconds: shot.seconds || plan.seconds || 8, count: shot.count || plan.count || 2, resolution: plan.resolution });
         if (plan.character) await attachCharacter(page, plan.character);
-        await submit(page, shot.prompt);
+        const prompt = shot.prompt || [plan.scene, `She says: "${shot.line}"`, plan.rules].filter(Boolean).join(' ');
+        await submit(page, prompt);
         console.log('submitted', shot.id);
-        await page.waitForTimeout(2500);
+        // one clip at a time: Flow's unusual-activity guard trips on bursts (references/flow-mechanics.md)
+        await waitForRenders(page, 1);
+        await page.waitForTimeout(30000);
       }
-      await waitForRenders(page, plan.shots.length);
       if (plan.out) await downloadAll(page, { kind: 'video', quality: plan.quality || '1080p', out: plan.out });
       return;
     }
