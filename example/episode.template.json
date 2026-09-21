@@ -1,0 +1,16 @@
+{
+  "project": "https://flow.google.com/project/<your-project-id>",
+  "character": "Dennis Halim",
+  "model": "Omni 1.1 Flash",
+  "ratio": "9:16",
+  "resolution": "720p",
+  "seconds": 8,
+  "count": 2,
+  "quality": "1080p",
+  "out": "./episodes/s1e01/clips",
+  "shots": [
+    { "id": "s1e01-01", "prompt": "Vertical handheld phone video ... (the theft). Ends on the character's first line." },
+    { "id": "s1e01-02", "prompt": "Vertical handheld phone video ... (the procedure). The character does the HR thing." },
+    { "id": "s1e01-03", "prompt": "Vertical handheld phone video ... (the escalation). Last line is the cliffhanger." }
+  ]
+}

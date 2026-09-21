@@ -1,0 +1,18 @@
+{
+  "project": "https://flow.google.com/project/<your-project-id>",
+  "character": "Ayu Pratiwi",
+  "model": "Omni 1.1 Flash",
+  "ratio": "9:16",
+  "resolution": "720p",
+  "seconds": 8,
+  "count": 2,
+  "quality": "1080p",
+  "out": "./episodes/day01/clips",
+  "scene": "Static locked-off shot, UGC iPhone front-camera footage, eye level. Ayu sits at her desk exactly as in the reference image, holding the grey handheld mic up near her chin, the mustard-yellow keyboard on the desk in front of her, the monstera on the right, soft window light, the arched mirror behind. She talks straight to camera with steady eye contact, mouth moving naturally, high energy like a creator who has done this a hundred times, small natural head movements, her other hand resting on the desk.",
+  "rules": "One continuous take, no jump cuts, no camera movement, no text on screen, confident pace, natural pauses, a small smile at the end.",
+  "shots": [
+    { "id": "day01-01", "line": "Okay, real talk. This keyboard cost me forty DOLLARS, and it fixed a problem I didn't even know I had." },
+    { "id": "day01-02", "line": "The problem was NOISE. My old keyboard was so loud my calls picked it up. This one? Nobody has said a word in two weeks." },
+    { "id": "day01-03", "line": "So, verdict. EARNED its place. Tomorrow: the light bar, and I already have opinions." }
+  ]
+}
