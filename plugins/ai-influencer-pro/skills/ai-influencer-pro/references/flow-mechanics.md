@@ -41,3 +41,18 @@ Read this when a Flow step fails. It is the UI as it exists today; Flow changes 
 - The video card sits blank (no % badge, no thumbnail) for 1-3 minutes on Omni Flash. That is normal.
 - A prompt with two speakers or two lines of dialogue in one 8 s shot produces mumbling. One line.
 - Ratio and model settings persist per project, but the count resets to x2 for video after a page load.
+
+## Uploading a reference image without the native file picker (21 Sep 2026)
+"+" > Upload media creates an `<input type=file>` on the fly and calls `.click()`, which opens a native
+picker no browser automation can drive. Patch the prototype first, then click Upload media, then push the
+file into the captured input:
+
+```js
+window.__fi=null; const oc=HTMLInputElement.prototype.click;
+HTMLInputElement.prototype.click=function(){ if(this.type==='file'){ window.__fi=this;
+  this.setAttribute('aria-label','FLOWUPLOAD'); if(!this.isConnected) document.body.appendChild(this); return; }
+  return oc.call(this); };
+```
+Then `find "FLOWUPLOAD"` -> `file_upload <ref> <path>`. The file appears under Uploads in the picker
+within ~5 s. Synthetic drag-and-drop events on the page do nothing. In Playwright use
+`page.waitForEvent('filechooser')` instead; `flow.mjs upload` does this.

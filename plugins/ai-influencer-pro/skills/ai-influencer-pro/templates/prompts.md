@@ -1,42 +1,37 @@
-# Prompts that produced usable output (Google Flow, 20 Sep 2026)
+# Prompts that produced usable output (Google Flow, 21 Sep 2026)
 
-## Character sheet — Nano Banana Pro, 16:9, x2
-Character reference sheet on one image, photoreal, 4 panels side by side on a plain light grey studio
-background with soft even lighting: (1) full body front view, (2) full body three-quarter view, (3) full
-body back view, (4) tight head-and-shoulders close-up. Same person in every panel. He is <NAME>, <VISUAL
-LOCK>. Natural skin texture, pores, slight asymmetry, no retouching, shot on a Canon 5D with a 50mm lens,
-catalogue style, no text labels.
+## Avatar from a reference frame — Nano Banana Pro, 9:16, x2, reference attached via "+" > Uploads
+Use the uploaded photo only as the reference for framing, camera angle, lighting, room and pose: keep the
+same seated position at the desk, the same handheld grey microphone in her right hand, the same eye-level
+phone-camera framing, the same soft window light and the same bedroom background with the arched mirror
+and the plants. Replace the person with a completely different woman: Indonesian, 29 years old,
+medium-brown skin, rounder face, monolid eyes, a wider nose, fuller cheeks, a small dark mole above the
+left corner of her lip, shoulder-length black hair tucked behind one ear, thin gold hoop earrings, one
+white AirPod in her left ear, a plain sage-green cotton t-shirt instead of the pink one, no rings. Put a
+mustard-yellow mechanical keyboard on the desk in front of her and a small monstera plant on the right
+side. Remove every caption and all text from the image. This must look like a real iPhone front-camera
+photo: natural skin texture with visible pores, slight sensor grain, no retouching, no overexposed
+highlights on the forehead, one unedited frame.
 
-Notes: "same person in every panel" and "no text labels" both matter. Without the first you get four
-cousins; without the second you get captions under each panel that the video model then tries to render.
+Template: [keep: framing, camera angle, lighting, room, pose, audio device] + [replace the person:
+genetics x5, hair, one accessory, one audio device, wardrobe] + [add: logo prop, greenery] + [remove
+text] + [real phone photo: pores, grain, no retouch, no blown highlights, one frame]. ONE shot. Regenerate,
+never edit in rounds.
 
-## Video shot — Omni 1.1 Flash, Ingredients (the character), 9:16, 720p, 8 s, x2
-Vertical handheld phone video filmed by <off-screen cast member>, slight camera shake, natural
-<time of day> daylight, <location>. <NAME> <position in frame>, <logo prop> visible, <what they are
-doing>. <THE EVENT in one sentence>. <NAME> <reaction in one sentence>, looks straight into the camera and
-says calmly: "<ONE LINE>." Ambient <location> sound, no music. Photoreal, natural skin texture, iPhone
-footage look.
+## Video clip — Omni 1.1 Flash, Ingredients (the Character), 9:16, 720p, 8 s
+Part 1, scene:
+Static locked-off shot, UGC iPhone front-camera footage, eye level. Ayu sits at her desk exactly as in
+the reference, holding the grey handheld mic up near her chin, yellow keyboard on the desk, monstera on
+the right, soft window light. She talks straight to camera with steady eye contact, mouth moving
+naturally, high energy like a creator who has done this a hundred times, small natural head movements,
+her other hand resting on the desk.
+Part 2, the line:
+She says: "Okay, real talk. This keyboard cost me forty dollars and it fixed a problem I didn't know I
+had. Tomorrow: the light bar."
+Part 3, fixed rules:
+One continuous take, no jump cuts, no camera movement, no text on screen, confident pace, natural
+pauses, a small smile at the end.
 
-Notes: the character name in the prompt refers to the attached ingredient. "Does not flinch" / "calmly"
-keeps Omni from over-acting. "no music" stops the model from adding a score you then have to strip.
-
-## Real example (Dennis Halim, CASE #0041)
-Shot 1: Vertical handheld phone video filmed by his daughter, slight camera shake, natural afternoon
-daylight, a public park bench in a Southeast Asian city. Dennis sits on the bench in the middle of the
-frame, lanyard with VISITOR badge visible, silver clipboard on his lap, unwrapping a sandwich. A grey
-pigeon lands on the bench, snatches the sandwich and flies away. Dennis does not flinch. He slowly clicks
-his pen, looks straight into the camera and says calmly: "Okay. I'm going to have to document this."
-Ambient park sound, birds, distant traffic, no music. Photoreal, natural skin texture, iPhone footage look.
-
-Shot 2: Vertical handheld phone video, slight camera shake, same park bench, natural afternoon daylight.
-Medium shot. Dennis stands next to the bench holding his silver clipboard up, lanyard with VISITOR badge
-visible. The grey pigeon is perched on the far end of the bench, calmly staring at him. Dennis reads from
-the clipboard in a polite HR voice: "This is your first written warning. Theft of company property. I'd
-like you to sign here." He holds the pen out toward the pigeon. The pigeon does nothing. Ambient park
-sound, no music. Photoreal, natural skin texture, iPhone footage look.
-
-Shot 3: Vertical handheld phone video, slight camera shake, same park bench, natural afternoon daylight.
-Dennis sits on the bench, clipboard on his lap, lanyard with VISITOR badge visible. Three grey pigeons now
-stand in a row on the bench beside him, all staring at him. Dennis looks at the pigeons, then slowly turns
-to the camera with a tired, calm face and says: "They've requested union representation." Beat. "HR will
-follow up." Ambient park sound, no music. Photoreal, natural skin texture, iPhone footage look.
+Rules: state the camera movement even when static; one line per 8 s; CAPITALISE the word to stress;
+if the line is ~7 s pad it with a throwaway word, render at 8 s, trim the tail; add a fixed rule for
+every complaint about the first render (too slow -> "faster", flat -> "high energy", cut -> "one take").

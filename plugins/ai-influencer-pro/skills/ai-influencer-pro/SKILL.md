@@ -19,25 +19,27 @@ to post so the account survives its first month.
 
 Five things a generic "make an AI influencer" prompt will not give you:
 
-1. **A character sheet before a single video.** Four views on one image, then split. The face has to
-   survive a cut before it has to survive an episode.
-2. **Lore before episodes.** A one-page bible with a logo prop, speech tics, a taboo and a season goal.
-   Behaviour is what people follow; the face is just how they find it again.
-3. **An episode engine, not ideas.** One offender + one procedure + one cliffhanger, numbered, with an
-   outro card. The audience learns the shape by episode three and comes back for the number.
-4. **Flow driven like a person.** `flow.mjs` types into the real UI in a real Chrome profile. There is no
-   Flow API; anything that claims otherwise is scraping the same UI with worse error messages.
-5. **Assembly that survives mismatched clips.** `assemble.sh` normalises every clip before concat and
-   burns the case number, the PART label and the outro card in one pass.
+1. **A real reference frame before any generation.** A still from a real creator's phone video, chosen
+   for framing, lighting (no blown highlights) and a background with a life in it. Generated portraits go
+   waxy when animated because there is nothing real in them to animate. This is 50% of the work.
+2. **A one-shot avatar.** Nano Banana Pro, one prompt with every change in it (a genetically different
+   person, one accessory, a visible reason the audio is clean, the logo prop), spam-generate until one is
+   right. Never edit in rounds.
+3. **A locked three-part video prompt.** Scene (camera movement stated, camera, action, energy), the line
+   in quotes, fixed rules stacked from what went wrong. Lock it on one line, then only swap the line.
+4. **A bible and a number.** Niche, one product a day, logo prop, three lines, a taboo; DAY n on every
+   post and an outro card. Behaviour is what people follow; the face is how they find it again.
+5. **Flow driven like a person, and ffmpeg for the rest.** `flow.mjs` types into the real UI in a Chrome
+   profile you log into once (there is no Flow API). `assemble.sh` stitches, labels, numbers.
 
 ## Hard rules
 
 | # | Rule |
 |---|---|
 | 1 | **Disclose.** "AI" in the bio, the platform's AI label on every post. The character can carry a product; the character never vouches for it. No "same person btw", no synthetic testimonials. |
-| 2 | **The visual lock paragraph goes into every prompt**, and the character is attached as an ingredient on every video shot. Both. One without the other drifts. |
+| 2 | **Start from a real reference frame**, never from a text prompt. The avatar is attached as a Character ingredient on every clip AND the scene paragraph of the locked prompt describes the same room. Both. |
 | 3 | **One line of dialogue per 8-second shot.** Two speakers or two lines in one shot produces mumbling on Omni and Veo alike. |
-| 4 | **Never generate a group shot as a character reference.** One subject per reference image (from the Mbok Geni bible; it still holds). |
+| 4 | **The avatar must be genetically different from the reference** (eyes, nose, skin, face shape), not just hair and clothes. Never deepfake a real person or a medical professional. |
 | 5 | **Screenshot after every submit in Flow.** Clicking a card while typing dumps your prompt into that asset's edit box. Count the cards. |
 | 6 | **Post 20 episodes before judging the character.** Measure follows per 1,000 views, not views. |
 | 7 | **Run one `flow.mjs` at a time** against one profile. Parallel runs trip Flow's "unusual activity" guard and the shots fail without charging you. When you see that card, wait a minute and use the card's retry. |
@@ -45,34 +47,40 @@ Five things a generic "make an AI influencer" prompt will not give you:
 ## The loop
 
 ```
-bible ──▶ sheet ──▶ character in Flow ──▶ episode plan (json) ──▶ flow.mjs batch ──▶ assemble.sh ──▶ post ──▶ measure
+bible ──▶ reference frame ──▶ one-shot avatar ──▶ Flow Character ──▶ locked prompt ──▶ flow.mjs batch ──▶ assemble.sh ──▶ post ──▶ measure
 ```
 
-1. **Bible.** Copy `templates/bible.md`, fill every line. `references/lore.md` explains each field.
-2. **Sheet.** Nano Banana Pro, 16:9, x2, 0 credits on PRO. Prompt in `templates/prompts.md`. Pick one.
-   Download 2K. `python3 scripts/split-sheet.py sheet.jpg refs/` gives front / three-quarter / back / face.
-3. **Character in Flow.** Characters > New character > Add from project > the sheet. Name it, paste the
-   bible into Character info. Now it appears in the "+" picker on every prompt.
-4. **Episode plan.** Copy `templates/episode.json`. Three shots: the event, the procedure, the
-   escalation. The last line of shot 3 is the cliffhanger. 8 s, 9:16, 720p, x2.
-5. **Generate.** `node scripts/flow.mjs batch --project <url> episodes/s1e01.json`. It attaches the
-   character, submits each shot, waits for the % badges to clear, downloads 1080p. ~72 credits per
-   episode at x2. `references/flow-mechanics.md` has the UI as of today and the failure modes.
-6. **Pick and assemble.** Watch both takes of each shot, keep one, then
-   `scripts/assemble.sh out.mp4 --case "CASE #0041" --part "PART 1" --handle @handle s1.mp4 s2.mp4 s3.mp4`.
-7. **Post.** `references/warm-up.md`: days 1-4 no posting, then one episode a day in the same slot,
-   AI label on, PART number in the caption, reply in character for the first hour.
-8. **Measure.** Follows per 1,000 views and 3-second completion. Nothing else for 30 days.
+Time split: 50% reference, 25% locking the prompt, 25% generating everything else.
+
+1. **Bible.** `templates/bible.md`. Niche with an affiliate from post 1, one product per video, logo prop,
+   three lines, a taboo, DAY numbering. `references/lore.md`.
+2. **Reference.** Find a talking-head creator in the niche (younger: TikTok, millennial: Instagram, older:
+   Facebook). Download the video, `ffmpeg -ss <t> -i v.mp4 -frames:v 1 ref.jpg`. Checklist in
+   `references/reference-frame.md`. Blur the face before it goes anywhere public.
+3. **Avatar.** Upload the reference to Flow (see flow-mechanics for the upload trick), Nano Banana Pro,
+   9:16, x2, the one-shot prompt in `templates/prompts.md`. Genetically different person or it is a
+   deepfake. Download 2K.
+4. **Character in Flow.** Characters > New character > Add from project > the avatar. Name, bible in
+   Character info.
+5. **Lock the prompt.** Video, Ingredients (the character), Omni 1.1 Flash, 9:16, 720p, 8 s. Three-part
+   prompt. Be harsh on the first renders; every complaint becomes a fixed rule. Capitalise the stressed
+   word. Pad a 7-second line to 8 with a throwaway word and trim.
+6. **Generate the season.** `node scripts/flow.mjs batch --project <url> episodes/day01.json`, one run at a
+   time, a pause between clips. ~12 credits per 8 s clip on Pro.
+7. **Assemble.** `scripts/assemble.sh out.mp4 --case "DAY 1" --part "@handle" --handle @handle c1.mp4 c2.mp4 c3.mp4`.
+8. **Post.** `references/warm-up.md`: four days of no posting, then one a day, AI label on, twenty before
+   judging. Measure follows per 1,000 views.
 
 ## Capability map
 
 | I need to... | Go to |
 |---|---|
 | Write the character, the lore, the season | `references/lore.md`, `templates/bible.md` |
-| Exact prompts that produced a usable sheet and shots | `templates/prompts.md` |
+| Exact prompts that produced a usable avatar and clips | `templates/prompts.md` |
+| What to look for in a reference frame | `references/reference-frame.md` |
 | Drive Flow from the terminal | `scripts/flow.mjs` |
 | Understand the Flow UI, credits, models, download sizes | `references/flow-mechanics.md` |
-| Split a sheet into references | `scripts/split-sheet.py` |
+| Split a 4-view sheet into references (optional, non-talking-head characters) | `scripts/split-sheet.py` |
 | Stitch shots, burn labels, add the outro | `scripts/assemble.sh` |
 | Warm up the account, labels, what to measure | `references/warm-up.md` |
 | Case studies with numbers (Yang Mun, Patryczek, Cringe Boy, Mbok Geni) | `references/case-studies.md` |
