@@ -1,0 +1,10 @@
+{
+  "out": "slides",
+  "slides": [
+    { "src": "shots/cover.jpg", "top": "<the credential, lower case>", "punch": "<n> things <who> told me to NEVER do <when>" },
+    { "src": "shots/scene-1.jpg", "top": "1. <the setup>", "punch": "<the instruction that contradicts instinct>", "bottom": "<the detail that makes it real>" },
+    { "src": "shots/scene-2.jpg", "top": "2. <the setup>", "punch": "<the instruction>", "bottom": "<the detail>" },
+    { "src": "shots/scene-3.jpg", "top": "3. <the setup>", "punch": "<the instruction>", "bottom": "<price, or the thing they can buy today>" },
+    { "src": "shots/closer.jpg", "top": "<why there are more>", "punch": "TIP 02 tomorrow", "bottom": "following = one a day. that's the whole deal.", "bottom_strength": 235 }
+  ]
+}

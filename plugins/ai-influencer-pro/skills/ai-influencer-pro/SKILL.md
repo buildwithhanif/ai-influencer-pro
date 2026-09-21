@@ -25,7 +25,9 @@ Five things a generic "make an AI influencer" prompt will not give you:
 2. **A one-shot avatar.** Nano Banana Pro, one prompt with every change in it (a genetically different
    person, one accessory, a visible reason the audio is clean, the logo prop), spam-generate until one is
    right. Never edit in rounds.
-3. **A locked three-part video prompt.** Scene (camera movement stated, camera, action, energy), the line
+3. **A hook written before the character, and a locked three-part video prompt.** The first eight seconds
+   are the product; the rest of the clip only justifies them. Test a new character on a hook alone.
+   Then: Scene (camera movement stated, camera, action, energy), the line
    in quotes, fixed rules stacked from what went wrong. Lock it on one line, then only swap the line.
 4. **A bible and a number.** Niche, one product a day, logo prop, three lines, a taboo; DAY n on every
    post and an outro card. Behaviour is what people follow; the face is how they find it again.
@@ -67,7 +69,9 @@ Time split: 50% reference, 25% locking the prompt, 25% generating everything els
    word. Pad a 7-second line to 8 with a throwaway word and trim.
 6. **Generate the season.** `node scripts/flow.mjs batch --project <url> episodes/day01.json`, one run at a
    time, a pause between clips. ~12 credits per 8 s clip on Pro.
-7. **Assemble.** `scripts/assemble.sh out.mp4 --case "DAY 1" --part "@handle" --handle @handle c1.mp4 c2.mp4 c3.mp4`.
+7. **Assemble.** Video: `scripts/assemble.sh out.mp4 --case "TIP 01" --part "@handle" --handle @handle c1.mp4 c2.mp4 c3.mp4`.
+   Carousel: generate 4 more scenes with the character attached (free on Pro), then
+   `python3 scripts/carousel.py tip01.json --out slides/`. Same tip, two formats, two slots in the calendar.
 8. **Post.** `references/warm-up.md`: four days of no posting, then one a day, AI label on, twenty before
    judging. Measure follows per 1,000 views.
 
@@ -81,6 +85,7 @@ Time split: 50% reference, 25% locking the prompt, 25% generating everything els
 | Drive Flow from the terminal | `scripts/flow.mjs` |
 | Understand the Flow UI, credits, models, download sizes | `references/flow-mechanics.md` |
 | Split a 4-view sheet into references (optional, non-talking-head characters) | `scripts/split-sheet.py` |
+| Turn generated scenes into a UGC carousel | `scripts/carousel.py`, `templates/carousel.json` |
 | Stitch shots, burn labels, add the outro | `scripts/assemble.sh` |
 | Warm up the account, labels, what to measure | `references/warm-up.md` |
 | Case studies with numbers (Yang Mun, Patryczek, Cringe Boy, Mbok Geni) | `references/case-studies.md` |
