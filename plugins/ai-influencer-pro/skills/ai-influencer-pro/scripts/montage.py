@@ -143,9 +143,11 @@ def main():
         os.path.join(ROOT, plan["out"])])
     shutil.rmtree(WORK, ignore_errors=True)
     final = os.path.join(ROOT, plan["out"])
-    a = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries",
-                        "stream=sample_rate:format=duration", "-of", "csv=p=0", final],
-                       capture_output=True, text=True).stdout.strip().split(",")
+    # ffprobe prints stream and format on separate LINES, not comma-joined.
+    a = [x for x in subprocess.run(
+        ["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries",
+         "stream=sample_rate:format=duration", "-of", "csv=p=0", final],
+        capture_output=True, text=True).stdout.replace(",", "\n").split() if x]
     v = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
                         "format=duration", "-of", "csv=p=0", final],
                        capture_output=True, text=True).stdout.strip()
