@@ -57,7 +57,7 @@ def build_clip(seg, idx):
     sh(["ffmpeg", "-y", "-v", "error", "-ss", str(seg["in"]), "-t", str(dur),
         "-i", os.path.join(ROOT, seg["src"]),
         "-c:v", "libx264", "-crf", "16", "-preset", "veryfast", "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "192k", "-r", str(FPS), cut])
+        "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", "-r", str(FPS), cut])
 
     plan = {
         "src": cut, "out": f"{WORK}/seg{idx:02d}.mp4", "duration": dur,
@@ -105,13 +105,13 @@ def build_card(seg, idx):
     for j, s in enumerate(seg.get("sfx", [])):
         cmd += ["-i", os.path.join(SFX, s["file"])]
         ms = int(s["at"] * 1000)
-        fc.append(f"[{j+2}:a]volume={s.get('db',-20)}dB,adelay={ms}|{ms},"
+        fc.append(f"[{j+2}:a]aresample=48000,volume={s.get('db',-20)}dB,adelay={ms}|{ms},"
                   f"apad=whole_dur={dur}[c{j}]")
         amix.append(f"[c{j}]")
     fc.append("".join(amix) + f"amix=inputs={len(amix)}:normalize=0:duration=first[a]")
     cmd += ["-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
             "-c:v", "libx264", "-crf", "16", "-preset", "veryfast", "-pix_fmt", "yuv420p",
-            "-r", str(FPS), "-c:a", "aac", "-b:a", "192k", out]
+            "-r", str(FPS), "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", out]
     sh(cmd)
     return out
 
@@ -126,6 +126,15 @@ def main():
         parts.append(build_card(seg, i) if seg["type"] == "card" else build_clip(seg, i))
         print(f"  [{i+1}/{len(plan['segments'])}] {seg.get('label', seg['type'])}")
 
+    # Every segment must agree before concat: the demuxer does not resample, it just
+    # concatenates, so one 96 kHz segment silently shortens the whole audio track.
+    for p in parts:
+        r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a:0",
+                            "-show_entries", "stream=sample_rate,channels", "-of", "csv=p=0", p],
+                           capture_output=True, text=True).stdout.strip()
+        if r != "48000,2":
+            sys.exit(f"FAIL {p}: audio is {r}, expected 48000,2")
+
     lst = f"{WORK}/list.txt"
     open(lst, "w").write("".join(f"file '{p}'\n" for p in parts))
     sh(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", lst,
@@ -133,7 +142,16 @@ def main():
         "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart",
         os.path.join(ROOT, plan["out"])])
     shutil.rmtree(WORK, ignore_errors=True)
-    print("wrote", plan["out"])
+    final = os.path.join(ROOT, plan["out"])
+    a = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries",
+                        "stream=sample_rate:format=duration", "-of", "csv=p=0", final],
+                       capture_output=True, text=True).stdout.strip().split(",")
+    v = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                        "format=duration", "-of", "csv=p=0", final],
+                       capture_output=True, text=True).stdout.strip()
+    print(f"wrote {plan['out']}  audio {a[1]}s @ {a[0]} Hz / video {v}s")
+    if abs(float(a[1]) - float(v)) > 0.2:
+        sys.exit("FAIL: audio and video lengths disagree")
 
 
 if __name__ == "__main__":

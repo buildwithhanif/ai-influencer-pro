@@ -55,7 +55,28 @@ on the cut itself. Everything at **-22 dB or lower** against a voice normalised 
 
 The test: if you can name the sound on a first watch, it is too loud.
 
-## Rule 4: the push-in is oversampled
+## Rule 4: pin the sample rate after loudnorm, and verify it
+
+`loudnorm` runs at 192 kHz internally **and outputs at 192 kHz**. The aac encoder cannot take
+that, so it silently lands on 96 kHz. Nothing errors. The clip plays fine on its own.
+
+Then you concat those clips with cards rendered at 48 kHz, and the concat demuxer — which does
+not resample, it only concatenates — produces a reel whose audio track is **five seconds
+shorter than its video**. Everything after the first card drifts. It looks like a mixing
+mistake and it is a sample-rate mistake.
+
+```
+loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000
+```
+
+plus `-ar 48000 -ac 2` on every output, and `aresample=48000` on every SFX input.
+
+Both scripts now assert it: `edit_hook.py` refuses to finish if the rate is not 48 kHz or if
+audio and video lengths differ by more than 0.12 s, and `montage.py` checks every segment
+before concat and the reel after. **Add the check to anything that concatenates** — this class
+of bug is invisible until someone watches the whole thing.
+
+## Rule 5: the push-in is oversampled
 
 4.5% over the clip. Oversample 2x before `zoompan`, because zoompan rounds its crop to whole
 pixels and on a locked-off talking head that rounding shows as a stutter.
