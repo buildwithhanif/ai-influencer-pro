@@ -73,10 +73,48 @@ def bias_y(scale, fill, bias=0.36):
     return 960 + 1920 * (scale / fill - 1) * (0.5 - bias)
 ```
 
+### 2b. There is no chroma key, and personMatte does not work
+
+`personMatte` is in the schema and reads like the answer to cutting a presenter
+out of a background. In 0.1.0 the segmenter returns an **empty mask**: with
+`emptyFallback: "hide"` the layer vanishes, with `"white"` nothing is cut. Test
+it before planning around it — the vendor docs say to, and they are right.
+
+There is no chroma key either. So a cut-out presenter means: generate on a green
+screen, build a matte outside, and drive the picture with a **luma track matte**
+(the matte layer is consumed and never paints itself).
+
+Key on **green dominance**, not colour distance:
+
+```
+format=gbrp,geq=r='if(gt(min(g(X,Y)-r(X,Y),g(X,Y)-b(X,Y)),25),0,255)':g='...':b='...'
+```
+
+`colorkey` punches holes in the shadow under a jaw and in clothing folds, because
+a dark neutral pixel sits closer to a mid green in RGB than a white one does.
+`chromakey` eats a cream sweatshirt, whose chroma is nearly neutral. "Is green
+clearly the largest channel here" separates subject from background cleanly and
+survives both. Close small specks with `dilation,dilation,erosion,erosion,erosion`
+— the extra erosion chokes a pixel off the edge and takes the green fringe with it.
+
+Size the cut-out from the **source**, not the canvas. The subject occupies maybe
+40% of a green frame, so a 62% layer scale gives a small floating figure in the
+middle of shot that reads as a sticker and covers the face behind it. Around 75%
+with the anchor maths putting the head low in frame gives a corner cut-in.
+
 ### 3. `cornerRadius` is normalized 0..1
 
 Not pixels. `1` is a full capsule, `16` is a capsule, `0.10` is a card. A picture-in-picture
 overlay that renders as a pill is this.
+
+### 3b. A Rect's anchorPoint is its own space too
+
+Same trap as Video, easy to miss because a rect has no obvious "natural size".
+`anchorPoint: [540, 960]` on a 720x104 pill parks the anchor far outside the
+shape and the pill lands nowhere near its `position`. Anchor at `[0, 0]` and
+centre the shape on that origin with `rect.position: [-w/2, -h/2]`. Hanging it
+above the origin instead (`[-w/2, -h]`) makes `scaleY` animate a bar rising from
+its baseline rather than swelling from its middle.
 
 ### 4. Audio gain cannot be animated on a Video layer
 
@@ -107,6 +145,12 @@ tsrct export --project promo.tsrct --output promo.mp4
 
 `commit` replaces the document, so **motion must be re-applied after every commit.** The
 action batch is idempotent: keyframes upsert by stable id.
+
+**Have the layout emit a manifest of the ids it used.** A caption style that
+sometimes adds a background slab and sometimes does not means the ids are not a
+fixed stride, and a motion pass that guesses them fails on
+`property.layer_id does not target an existing layer` — after a partial apply.
+`build.py` writes `editable-manifest.json`; `motion.py` reads it.
 
 Cuts are `sourceRange` (which moment of the source) plus `activeRange` (where it sits in
 the edit), both in ms, both parent-local. Nothing is pre-trimmed with ffmpeg, so every cut
