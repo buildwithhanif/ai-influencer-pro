@@ -132,6 +132,7 @@ becomes the standard the whole series is locked into.
 | Edit a hook: captions on real speech, Apple type, SFX under the floor | `references/editing.md`, `scripts/edit_hook.py` |
 | Find the real phrase boundaries in a clip (silencedetect cannot) | `scripts/beats.py` |
 | Cut the cast reel: cold open, the turn, the run, the close | `references/editing.md`, `scripts/montage.py` |
+| Build anything with structure: promo, multi-beat edit, motion graphics | `references/tesseract.md` |
 | Warm up the account, labels, what to measure | `references/warm-up.md` |
 | Case studies with numbers (Yang Mun, Patryczek, Cringe Boy, Mbok Geni) | `references/case-studies.md` |
 

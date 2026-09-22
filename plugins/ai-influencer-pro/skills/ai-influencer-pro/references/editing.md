@@ -139,7 +139,13 @@ sync with each cut, which is worse than not cutting at all.
 
 Head and tail are never clipped — only air between phrases.
 
-**Still missing from this pipeline**, in the order I would add them:
+**Past a single hook, stop using ffmpeg to assemble.** These scripts are right for one
+clip: read the speech, cut on it, burn the type, done. A promo with six beats, an overlay,
+a product burst and a turn is a different job, and doing it in ffmpeg means re-rendering
+the whole thing to look at any part of it. `references/tesseract.md` covers the editor —
+editable project document, keyframes with easing, filmstrip review without an encode.
+
+**Still missing from the hook pipeline**, in the order I would add them:
 
 1. **A text-only beat** — one full-frame card mid-hook on the strongest claim.
 2. **Speed ramp into a cut** — 2 to 3 frames of motion blur under the swoosh.
