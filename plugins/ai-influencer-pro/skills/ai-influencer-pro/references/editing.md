@@ -89,6 +89,43 @@ scale=2160:3840,zoompan=z='min(zoom+0.00023,1.045)':d=1
 Note `zoom`, not `z`, inside the x/y expressions. `z` there is a syntax error that only shows
 up at filter-configure time.
 
+## Rule 6: technique, and where b-roll actually belongs
+
+Captions, an accent and a push are **polish**, not editing. The first cast reel had nothing an
+editor would call a cut, and it read flat for exactly that reason.
+
+**Inside a hook, the only move is the punch-in.** A hard cut to a tighter crop on the word that
+matters. It never leaves the face, which is the point: the hook's whole job is a person making
+a claim in the first two seconds, and cutting away there kills the thing you built. Make it a
+real cut, not a zoom — the jump is what registers.
+
+```json
+"cuts": [ {"at": 2.00, "scale": 1.16}, {"at": 7.22, "scale": 1.34} ],
+"punch_bias": 0.36
+```
+
+`punch_bias` biases the crop upward so the tighter frame lands on the eyes rather than the
+chin. 0.36 is right for a seated talking head; the default 0.5 centres and cuts foreheads.
+
+**Across a run, the move is focal length.** Thirteen fragments at the same crop read as one
+long shot with the face swapped. Give consecutive clips different framing — `base_scale`
+alternating roughly 1.0 / 1.2 / 1.3 — and the run gets a rhythm without a single new asset.
+
+**B-roll belongs in the content half, not the hook.** There is no b-roll in a hook reel because
+there should not be. When the content half exists, b-roll goes on the *claim*, never on the
+face: the shot of the charger, the notebook, the empty fridge. Generate those as stills with
+the character attached (free on Pro) rather than as video — a 1.5 s still with a slow push
+cuts better than a 4 s clip that has to be trimmed anyway, and it costs nothing.
+
+**Still missing from this pipeline**, in the order I would add them:
+
+1. **Jump cuts inside a take** — remove breath gaps over ~0.45 s. Tightens pace and is the
+   single most recognisable "edited" signal. Needs the beat list to be re-timed after the cut,
+   which is why it is not here yet.
+2. **A text-only beat** — one full-frame card mid-hook on the strongest claim.
+3. **Speed ramp into a cut** — 2 to 3 frames of motion blur under the swoosh.
+4. **B-roll inserts**, once there is content to insert them into.
+
 ## The plan file
 
 One JSON per clip; the script never changes.

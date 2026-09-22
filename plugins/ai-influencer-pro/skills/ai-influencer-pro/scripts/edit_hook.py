@@ -206,17 +206,52 @@ def main():
     print(f"rendered {n} overlay frames")
 
     # push-in: 1.00 -> 1.045 across the clip, then crop back to frame
-    # Push-in. Oversample 2x before zoompan: zoompan rounds its crop to whole pixels, and
-    # at 1x that rounding is visible as a stutter on a locked-off shot.
+    # BASE VIDEO
+    # "cuts" turns the clip into hard punch-ins: a cut to a tighter crop on the word that
+    # matters. This is the one editing move that works inside a hook, because it never leaves
+    # the face. Cutting away to b-roll in the first seconds kills the thing the hook is for.
+    # Each cut is a real cut, not a zoom: the jump is the point.
+    cuts = plan.get("cuts", [])
     z = plan.get("push", 0.045)
-    if z:
-        step = z / n
-        vf = (f"scale={W*2}:{H*2}:flags=lanczos,"
-              f"zoompan=z='min(zoom+{step:.8f},{1+z})':d=1"
-              f":x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s={W}x{H}:fps={FPS},"
-              f"format=yuv420p")
+    dur = plan["duration"]
+
+    def crop_at(scale):
+        """Scale up and crop back to frame, biased slightly high so the punch lands on eyes."""
+        if scale <= 1.001:
+            return f"scale={W}:{H}:flags=lanczos"
+        sw, sh_ = int(W * scale) // 2 * 2, int(H * scale) // 2 * 2
+        x, y = (sw - W) // 2, int((sh_ - H) * plan.get("punch_bias", 0.38))
+        return f"scale={sw}:{sh_}:flags=lanczos,crop={W}:{H}:{x}:{y}"
+
+    base_scale = plan.get("base_scale", 1.0)
+    if cuts:
+        bounds = [0.0] + [c["at"] for c in cuts] + [dur]
+        scales = [base_scale] + [c["scale"] for c in cuts]
+        parts, labs = [], []
+        for i, sc in enumerate(scales):
+            a, b = bounds[i], bounds[i + 1]
+            lab = f"[p{i}]"
+            parts.append(f"[0:v]trim={a}:{b},setpts=PTS-STARTPTS,{crop_at(sc)},"
+                         f"format=yuv420p{lab}")
+            labs.append(lab)
+        base_chain = ";".join(parts) + ";" + "".join(labs) + \
+                     f"concat=n={len(labs)}:v=1:a=0[base]"
+    elif base_scale > 1.001:
+        # A fixed tighter frame. In a run of short fragments this is the rhythm: consecutive
+        # clips must not share a focal length or the whole run reads as one long shot.
+        base_chain = f"[0:v]{crop_at(base_scale)},format=yuv420p[base]"
     else:
-        vf = f"scale={W}:{H}:flags=lanczos,format=yuv420p" 
+        # Slow push-in. Oversample 2x before zoompan: zoompan rounds its crop to whole pixels,
+        # and at 1x that rounding shows as a stutter on a locked-off shot.
+        n_ = int(dur * FPS)
+        if z:
+            step = z / n_
+            base_chain = (f"[0:v]scale={W*2}:{H*2}:flags=lanczos,"
+                          f"zoompan=z='min(zoom+{step:.8f},{1+z})':d=1"
+                          f":x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s={W}x{H}:fps={FPS},"
+                          f"format=yuv420p[base]")
+        else:
+            base_chain = f"[0:v]scale={W}:{H}:flags=lanczos,format=yuv420p[base]"
 
     cmd = ["ffmpeg", "-y", "-v", "error",
            "-t", str(plan["duration"]), "-i", src,
@@ -226,7 +261,7 @@ def main():
         cmd += ["-i", os.path.join(SFX, s["file"])]
 
     # video: push-in then overlay the rendered type
-    fc = [f"[0:v]{vf}[base]", "[base][1:v]overlay=0:0:format=auto[v]"]
+    fc = [base_chain, "[base][1:v]overlay=0:0:format=auto[v]"]
 
     # audio: voice + every SFX delayed to its cue, all mixed
     # loudnorm runs at 192 kHz internally and OUTPUTS at 192 kHz. Without the aresample the
