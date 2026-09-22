@@ -1,7 +1,7 @@
-# Bulk casting v2: 30 ordinary people, from 10 real UGC screenshots
+# Bulk casting v2: 30 ordinary people, from 20 real UGC screenshots
 
-Cast a roster of faces in one ChatGPT session. Ten screenshots of real creators carry the look; a
-fixed list of 30 people carries the variety. Nothing else is specified, on purpose.
+Cast a roster of faces in one ChatGPT session. Screenshots of real creators carry the look; a fixed
+list of 30 people carries the variety. Nothing else is specified, on purpose.
 
 ## What v1 got wrong
 
@@ -33,18 +33,21 @@ the second half; it also stops the whole batch inheriting one room.
 One thing the set does not give you: **nobody over about forty.** Across 105 candidates, the people
 making content about being a UGC creator were almost all women in their twenties and thirties. Watch
 the older rows of the cast list harder than the rest, because that is where the model has the least
-to copy and the most room to invent a stock photo. They are not face references. They are the answer to "what does a
-real one of these actually look like", which is a question ChatGPT gets wrong by default.
+to copy and the most room to invent a stock photo.
+
+They are not face references. They are the answer to "what does a real one of these actually look
+like", which is the question ChatGPT gets wrong by default.
 
 Scores ran from 52 to 100 on the frame scorer, and that is fine — these are the look reference, not
-the avatar. The one thing to know: several have burned-in captions across the chest or face, so the
-prompt tells ChatGPT to ignore text in the references and never reproduce it.
+the avatar. Several have burned-in captions across the chest or face, so the prompt tells ChatGPT to
+ignore text in the references and never reproduce it.
 
 ---
 
 ## The kickoff prompt
 
-Attach all ten reference screenshots. Paste everything between the lines.
+Attach ten reference screenshots (ref-01..10 for cast rows 1-15, ref-11..20 for rows 16-30).
+Paste everything between the lines.
 
 ---
 
