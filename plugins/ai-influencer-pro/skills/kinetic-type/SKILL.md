@@ -76,7 +76,7 @@ and import `kinetic.font_files()` into the project with `tsrct project import-fo
 | Where it goes in the frame, per kind of shot | `references/placement.md` |
 | Words from whisper, time from the waveform, when to rewrite the line | `references/timing.md` |
 | The spec format and markup | `references/spec.md` |
-| Tesseract traps that bite this (fonts, anchors, commit wipes motion) | `references/tesseract.md` |
+| Tesseract traps that bite this (fonts, anchors, commit wipes motion) | `references/tesseract.md`; everything else about the edit: the `tesseract-edit` skill |
 | Doing it with Omni 1.1 video editing instead, and why it lost | `references/omni.md` |
 | Font addressing for a face that is not Inter | `scripts/fontprobe.py` |
 
