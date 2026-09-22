@@ -54,7 +54,8 @@ Six things a generic "make an AI influencer" prompt will not give you:
 | 5 | **Screenshot after every submit in Flow.** Clicking a card while typing dumps your prompt into that asset's edit box. Count the cards. |
 | 6 | **Post 20 episodes before judging the character.** Measure follows per 1,000 views, not views. |
 | 7 | **Run one `flow.mjs` at a time** against one profile. Parallel runs trip Flow's "unusual activity" guard and the shots fail without charging you. When you see that card, wait a minute and use the card's retry. |
-| 8 | **Three failed renders on one reference means a new reference**, not a fourth prompt. About 1 in 10 frames will not animate whatever you write. Images are free on Pro; video is not. |
+| 8 | **Caption on measured speech, never by ear.** `silencedetect` returns nothing on Omni clips (continuous room tone); `beats.py` reads the RMS envelope instead. A caption a third of a second late reads as cheap and nobody can say why. |
+| 9 | **Three failed renders on one reference means a new reference**, not a fourth prompt. About 1 in 10 frames will not animate whatever you write. Images are free on Pro; video is not. |
 
 ## The loop
 
@@ -104,7 +105,10 @@ becomes the standard the whole series is locked into.
    Carousel: generate 4 more scenes with the character attached (free on Pro), then
    `python3 scripts/carousel.py tip01.json --out slides/`. Same tip, two formats, two slots in the
    calendar.
-9. **Post.** `references/warm-up.md`: four days of no posting, then one a day, AI label on, twenty
+9. **Edit.** `python3 scripts/beats.py <clip>` for the phrase boundaries, then a plan per clip
+   and `python3 scripts/edit_hook.py plans/<name>.json`. Captions cut on real speech, SF Pro
+   Display, one accent word, SFX at -22 dB or lower. `references/editing.md`.
+10. **Post.** `references/warm-up.md`: four days of no posting, then one a day, AI label on, twenty
    before judging. Measure follows per 1,000 views.
 
 ## Capability map
@@ -125,6 +129,9 @@ becomes the standard the whole series is locked into.
 | Cast 30 characters at once in ChatGPT, then measure what survives | `templates/bulk-casting-chatgpt.md` |
 | Turn generated scenes into a UGC carousel | `scripts/carousel.py`, `templates/carousel.json` |
 | Stitch shots, burn labels, add the outro | `scripts/assemble.sh` |
+| Edit a hook: captions on real speech, Apple type, SFX under the floor | `references/editing.md`, `scripts/edit_hook.py` |
+| Find the real phrase boundaries in a clip (silencedetect cannot) | `scripts/beats.py` |
+| Cut the cast reel: cold open, the turn, the run, the close | `references/editing.md`, `scripts/montage.py` |
 | Warm up the account, labels, what to measure | `references/warm-up.md` |
 | Case studies with numbers (Yang Mun, Patryczek, Cringe Boy, Mbok Geni) | `references/case-studies.md` |
 
