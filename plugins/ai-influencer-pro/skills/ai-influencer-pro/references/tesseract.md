@@ -166,6 +166,37 @@ stays revisable. Document `duration` is in **seconds**.
 `layers[0]` is frontmost. `volume: 1.0` enables a Video layer's embedded audio; omitting it
 leaves the clip silent.
 
+## A compilation: every creator is a different account
+
+When the video's claim is "these are all different people", nothing may look
+shared. Give each creator an ORDINARY caption preset (TikTok black box, one word
+at a time in heavy caps, lowercase aesthetic, serif italic, white box with dark
+text, coloured slab, glow) and never reuse one across two people. Kinetic type
+belongs only to the narrator. Measure every chunk with PIL at its real size so a
+background box fits the words and a chunk never wraps.
+
+Between creators, a **TikTok swipe-up**: it reads as scrolling a feed, which is
+the claim. Do it with the OUTGOING shot's tail, not the incoming shot's pre-roll —
+half the creators start talking at 0.02 s, so there are no spare frames before
+their cut. The tail is a separate muted Video layer (src_out to src_out+180 ms),
+so its audio never runs over the next person's first word; check each tail lands
+in silence against the transcript. Key both layers' `positionY` on the **same**
+curve (incoming y+1920 to y, outgoing y to y-1920) and they stay exactly a frame
+apart. `motionBlur: true` on both. Captions start after the swipe lands.
+
+`Audio` layers work for SFX: `{"type":"Audio","windowMs":<ms>, "source":{"assetId":..},
+"volume":0.22, "captionsEnabled":false, ...}`. Place the file so its loudest point
+lands mid-swipe. To check a sound is really in the mix, export with every Video
+layer at volume 0 and measure; with voices on top, RMS proves nothing.
+
+## Omni 1.1 as a video editor
+
+Clicking a clip in Flow opens an editor with "Describe how to edit this video",
+running Omni 1.1 Flash. Asked to add kinetic text, it spelled every word right,
+kept the face, voice and lip sync, and animated the letters well. It also put
+the text over the subject's hair and ran it ahead of the speech, and the result
+is baked in: no retiming, no moving it. About 40 credits for 10 s.
+
 ## Verify with a transcript, not only a filmstrip
 
 `npx hyperframes transcribe file.mp4 --language en --json` runs whisper locally and
