@@ -169,6 +169,26 @@ def render_frame(i, plan, cap_font, kick_font):
     return im
 
 
+def verify(path, want):
+    """Audio and video must agree, and the rate must be 48 kHz. A silent mismatch here is
+    what breaks a concat later, and it is invisible until you play the reel."""
+    def probe(sel, fields):
+        # ffprobe prints stream and format sections on separate LINES, not comma-joined.
+        out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", sel,
+                              "-show_entries", fields, "-of", "csv=p=0", path],
+                             capture_output=True, text=True).stdout
+        return [x for x in out.replace(",", "\n").split() if x]
+    a = probe("a:0", "stream=sample_rate:format=duration")
+    v = probe("v:0", "format=duration")
+    rate = int(a[0]); adur = float(a[1]); vdur = float(v[0])
+    if rate != 48000:
+        sys.exit(f"FAIL {path}: audio is {rate} Hz, expected 48000")
+    if abs(adur - vdur) > 0.12:
+        sys.exit(f"FAIL {path}: audio {adur:.2f}s vs video {vdur:.2f}s")
+    if abs(vdur - want) > 0.15:
+        print(f"  note: {path} is {vdur:.2f}s, plan asked for {want:.2f}s")
+
+
 def main():
     plan = json.load(open(sys.argv[1]))
     src = plan["src"]
@@ -209,13 +229,17 @@ def main():
     fc = [f"[0:v]{vf}[base]", "[base][1:v]overlay=0:0:format=auto[v]"]
 
     # audio: voice + every SFX delayed to its cue, all mixed
+    # loudnorm runs at 192 kHz internally and OUTPUTS at 192 kHz. Without the aresample the
+    # encoder lands on 96 kHz, every clip disagrees with every card, and the concat demuxer
+    # (which needs identical stream parameters) produces an audio track shorter than the
+    # video. Always pin the rate after loudnorm.
     fc.append(f"[0:a]atrim=0:{plan['duration']},asetpts=PTS-STARTPTS,"
-              f"loudnorm=I=-16:TP=-1.5:LRA=11[voice]")
+              f"loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[voice]")
     mix = ["[voice]"]
     for idx, s in enumerate(sfx):
         lab = f"[s{idx}]"
         ms = int(s["at"] * 1000)
-        fc.append(f"[{idx+2}:a]volume={s.get('db', -20)}dB,"
+        fc.append(f"[{idx+2}:a]aresample=48000,volume={s.get('db', -20)}dB,"
                   f"adelay={ms}|{ms},apad=whole_dur={plan['duration']}{lab}")
         mix.append(lab)
     fc.append("".join(mix) + f"amix=inputs={len(mix)}:normalize=0:duration=first[a]")
@@ -224,12 +248,13 @@ def main():
             "-map", "[v]", "-map", "[a]",
             "-c:v", "libx264", "-profile:v", "high", "-crf", "17", "-preset", "slow",
             "-pix_fmt", "yuv420p", "-r", str(FPS),
-            "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart",
-            plan["out"]]
+            "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
+            "-movflags", "+faststart", plan["out"]]
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
         print(r.stderr[-3000:]); sys.exit(1)
     shutil.rmtree(outdir, ignore_errors=True)
+    verify(plan["out"], plan["duration"])
     print("wrote", plan["out"])
 
 
