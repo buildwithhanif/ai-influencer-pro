@@ -18,14 +18,22 @@ the clothes, the pose — is ordinary by instruction, not by design.
 
 ## The reference set
 
-Ten screenshots pulled from real TikTok videos found by searching "UGC", "ugc creator" across US, GB
-and ID. This is the same sourcing step as the main workflow: real creator, real phone, real room.
+Twenty screenshots pulled from real TikTok videos found by searching "ugc", "ugc creator" and "ugc
+example" across US, GB, ID, PH and CA. This is the same sourcing step as the main workflow: real
+creator, real phone, real room.
 
-The set is deliberately mixed — 6 women, 4 men, several ethnicities, and ten different ordinary
-rooms: a living-room couch, a bed, a room with framed prints, two home desks, a bedroom with an LED
-strip, a dining table, a kitchen island, a laptop desk.
+The set is deliberately mixed — 14 women, 6 men, several ethnicities, and twenty different ordinary
+rooms: a living-room couch, an unmade bed, rooms with framed prints, home desks, a bedroom with an
+LED strip, dining tables, a kitchen island, a hallway, a back patio.
 
-You attach **all ten at once**. They are not face references. They are the answer to "what does a
+**Attach ten at a time**, not all twenty — more than about ten and the model starts averaging them
+instead of reading them. Use ref-01 to ref-10 for the first half of the cast and ref-11 to ref-20 for
+the second half; it also stops the whole batch inheriting one room.
+
+One thing the set does not give you: **nobody over about forty.** Across 105 candidates, the people
+making content about being a UGC creator were almost all women in their twenties and thirties. Watch
+the older rows of the cast list harder than the rest, because that is where the model has the least
+to copy and the most room to invent a stock photo. They are not face references. They are the answer to "what does a
 real one of these actually look like", which is a question ChatGPT gets wrong by default.
 
 Scores ran from 52 to 100 on the frame scorer, and that is fine — these are the look reference, not
