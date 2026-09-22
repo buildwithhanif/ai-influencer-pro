@@ -47,7 +47,14 @@ Use the **`font` value** (the PostScript name) as `fontFamily`:
 ```
 
 `"SF Pro Display"` + `"Bold"` does not render. Two weights coexist fine once addressed
-this way. The resolver also carries a catalogue baked into the binary, so an error naming
+this way.
+
+**But there is no rule that survives every font — probe each face.** On Montserrat the
+importer prints `fontStyle: "Regular"` for ExtraBold, and `Regular` is what fails;
+`Montserrat-ExtraBold` + `ExtraBold` renders. Meanwhile `Montserrat-Bold` + `Bold` fails
+and `Montserrat` + `Bold` renders. Before building, drop each face into a scratch
+document and try the combinations; keep whichever produces a PNG. Check for the file,
+not the exit code: a `missing_fonts` error is JSON on stdout, not a crash. The resolver also carries a catalogue baked into the binary, so an error naming
 a font file you never imported is it matching its own bundled copy.
 
 ### 2. anchorPoint is layer-local, and nothing is auto-fitted
@@ -158,6 +165,22 @@ stays revisable. Document `duration` is in **seconds**.
 
 `layers[0]` is frontmost. `volume: 1.0` enables a Video layer's embedded audio; omitting it
 leaves the clip silent.
+
+## Verify with a transcript, not only a filmstrip
+
+`npx hyperframes transcribe file.mp4 --language en --json` runs whisper locally and
+returns word timings. Use it twice:
+
+1. **On every generated take, before editing.** A waveform shows speech; it cannot show
+   that the model said "I have 30 AI influencers" twice. The transcript can, and a jump
+   cut from the first "30" to the second fixed that take without another generation.
+2. **On the finished master.** Read the whole video back as text. It caught two cuts that
+   ended a word early ("23-tab prop", "Optimum Nutrition cream") that no filmstrip could
+   show, and confirmed a ducked voice underneath really was inaudible.
+
+Take the **words** from whisper and the **timing** from `beats.py`: whisper's starts drift
+up to ~0.8 s early on these clips, and it snaps the first word to 0.0. It also misspells
+brands ("Anchor" for Anker), so captions are typed, not pasted.
 
 ## What still belongs to ffmpeg
 
