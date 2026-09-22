@@ -23,8 +23,76 @@ WHY IT WORKS THE WAY IT DOES
 
 Needs: Pillow, ffmpeg, ffprobe. Fonts come from ./fonts, SFX from ./sfx.
 """
-import json, math, os, shutil, subprocess, sys
+import importlib.util, json, math, os, shutil, subprocess, sys
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+
+_spec = importlib.util.spec_from_file_location(
+    "beats", os.path.join(os.path.dirname(os.path.abspath(__file__)), "beats.py"))
+beats_mod = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(beats_mod)
+
+
+def jump_cut(src, dur, cfg, workdir):
+    """Cut the dead air out of a take.
+
+    Omni leaves 0.5-1.3 s of room tone between clauses because it is pacing the line to fill a
+    fixed slot. Nobody edits a real UGC video that way: they cut the breath out, and that tight
+    rhythm is the most recognisable 'this was edited' signal there is.
+
+    Returns (new_src, new_duration, map_time) where map_time converts a timestamp in the
+    original take to its position in the tightened one, so every caption cue still lands on
+    the word it belongs to.
+    """
+    keep_pad = cfg.get("keep", 0.12)
+    min_gap = cfg.get("min_gap", 0.45)
+    ph, _ = beats_mod.phrases(src)
+    ph = [(a, b) for a, b in ph if a < dur]
+    if not ph:
+        return src, dur, (lambda t: t)
+
+    # Grow each phrase by the pad, then merge anything that now overlaps. What is left between
+    # the merged blocks is dead air longer than min_gap, and that is what gets removed.
+    keeps = []
+    for a, b in ph:
+        a2, b2 = max(0.0, a - keep_pad), min(dur, b + keep_pad)
+        if keeps and a2 - keeps[-1][1] < min_gap:
+            keeps[-1] = (keeps[-1][0], b2)
+        else:
+            keeps.append((a2, b2))
+    keeps[0] = (0.0, keeps[0][1])           # never clip the head
+    keeps[-1] = (keeps[-1][0], dur)          # never clip the tail
+
+    removed = dur - sum(b - a for a, b in keeps)
+    if removed < 0.12:
+        return src, dur, (lambda t: t)
+
+    out = os.path.join(workdir, "tight.mp4")
+    v = "".join(f"[0:v]trim={a}:{b},setpts=PTS-STARTPTS[v{i}];" for i, (a, b) in enumerate(keeps))
+    a_ = "".join(f"[0:a]atrim={a}:{b},asetpts=PTS-STARTPTS[a{i}];" for i, (a, b) in enumerate(keeps))
+    cc = "".join(f"[v{i}][a{i}]" for i in range(len(keeps)))
+    fc = v + a_ + cc + f"concat=n={len(keeps)}:v=1:a=1[v][a]"
+    r = subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", src, "-filter_complex", fc,
+                        "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-crf", "16",
+                        "-preset", "veryfast", "-pix_fmt", "yuv420p", "-c:a", "aac",
+                        "-b:a", "192k", "-ar", "48000", "-ac", "2", out],
+                       capture_output=True, text=True)
+    if r.returncode:
+        print(r.stderr[-1500:]); sys.exit(1)
+
+    starts, acc = [], 0.0
+    for a, b in keeps:
+        starts.append((a, b, acc)); acc += b - a
+
+    def map_time(t):
+        for a, b, base in starts:
+            if t < a:
+                return base                       # inside removed air: snap to the next keep
+            if t <= b:
+                return base + (t - a)
+        return acc
+
+    print(f"  jump cut: removed {removed:.2f}s of air across {len(keeps)-1} cuts "
+          f"({dur:.2f}s -> {acc:.2f}s)")
+    return out, round(acc, 3), map_time
 
 W, H = 1080, 1920
 FPS = 24
@@ -195,6 +263,14 @@ def main():
     outdir = plan.get("frames", "/tmp/hookframes")
     shutil.rmtree(outdir, ignore_errors=True)
     os.makedirs(outdir, exist_ok=True)
+
+    if plan.get("jumpcut"):
+        src, newdur, mt = jump_cut(src, plan["duration"], plan["jumpcut"], outdir)
+        plan["duration"] = newdur
+        for bt in plan["beats"]:
+            bt["in"], bt["out"] = round(mt(bt["in"]), 3), round(mt(bt["out"]), 3)
+        for c in plan.get("cuts", []):
+            c["at"] = round(mt(c["at"]), 3)
 
     cap_font = font(plan.get("caption_font", "SF-Pro-Display-Bold.otf"),
                     plan.get("caption_size", 70))

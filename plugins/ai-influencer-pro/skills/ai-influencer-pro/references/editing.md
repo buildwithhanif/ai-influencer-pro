@@ -117,14 +117,33 @@ face: the shot of the charger, the notebook, the empty fridge. Generate those as
 the character attached (free on Pro) rather than as video — a 1.5 s still with a slow push
 cuts better than a 4 s clip that has to be trimmed anyway, and it costs nothing.
 
+### Jump cuts
+
+The most recognisable "this was edited" signal, and the cheapest. Omni leaves 0.5–1.3 s of room
+tone between clauses because it is pacing the line to fill a fixed slot; nobody edits a real UGC
+video that way.
+
+```json
+"jumpcut": { "min_gap": 0.28, "keep": 0.06 }
+```
+
+`keep` pads each phrase before the gap is measured, so a cut never clips a consonant. `min_gap`
+is how much air has to be left after padding before it is worth cutting. Measured results:
+Robyn 8.15 s → 7.11 s across 2 cuts, Marilou 8.60 s → 6.57 s across 3 — a quarter of the clip
+was silence.
+
+The reason this took a rewrite rather than a flag: **cutting time out invalidates every caption
+cue after it.** `jump_cut()` returns a `map_time` function alongside the tightened clip, and
+every beat and punch-in is remapped through it. Without that the captions drift further out of
+sync with each cut, which is worse than not cutting at all.
+
+Head and tail are never clipped — only air between phrases.
+
 **Still missing from this pipeline**, in the order I would add them:
 
-1. **Jump cuts inside a take** — remove breath gaps over ~0.45 s. Tightens pace and is the
-   single most recognisable "edited" signal. Needs the beat list to be re-timed after the cut,
-   which is why it is not here yet.
-2. **A text-only beat** — one full-frame card mid-hook on the strongest claim.
-3. **Speed ramp into a cut** — 2 to 3 frames of motion blur under the swoosh.
-4. **B-roll inserts**, once there is content to insert them into.
+1. **A text-only beat** — one full-frame card mid-hook on the strongest claim.
+2. **Speed ramp into a cut** — 2 to 3 frames of motion blur under the swoosh.
+3. **B-roll inserts**, once there is content to insert them into.
 
 ## The plan file
 

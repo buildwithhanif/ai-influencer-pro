@@ -13,6 +13,39 @@ tail starts, which is where `duration` should end.
 """
 import re, subprocess, sys, tempfile, os
 
+def phrases(path, floor=-45.0, min_gap=0.25):
+    """Speech windows in a clip, as [(start, end), ...]. Shared with edit_hook's jump cutter."""
+    tmp = tempfile.mktemp(suffix=".txt")
+    subprocess.run(["ffmpeg", "-v", "error", "-i", path, "-af",
+                    f"astats=metadata=1:reset=1,ametadata=print:"
+                    f"key=lavfi.astats.Overall.RMS_level:file={tmp}",
+                    "-f", "null", "-"], capture_output=True)
+    pairs = re.findall(r"pts_time:([0-9.]+)\n[^\n]*RMS_level=(-?[0-9.]+|-inf)",
+                       open(tmp).read())
+    os.remove(tmp)
+    ser = [(float(t), -99.0 if v == "-inf" else float(v)) for t, v in pairs]
+    if not ser:
+        return [], 0.0
+    loud = [v for _, v in ser if v > floor]
+    speak = sum(loud) / len(loud) if loud else -30
+    gate = max(floor, speak - 10)
+    on = [(t, v > gate) for t, v in ser]
+    runs, cur, start = [], on[0][1], on[0][0]
+    for t, state in on[1:]:
+        if state != cur:
+            runs.append((start, t, cur)); cur, start = state, t
+    runs.append((start, ser[-1][0], cur))
+    out = []
+    for a, b, s_ in runs:
+        if not s_ or b - a < 0.18:
+            continue
+        if out and a - out[-1][1] < min_gap:
+            out[-1] = (out[-1][0], b)
+        else:
+            out.append((a, b))
+    return out, ser[-1][0]
+
+
 def main():
     path = sys.argv[1]
     floor = float(sys.argv[sys.argv.index("--floor") + 1]) if "--floor" in sys.argv else -45.0
