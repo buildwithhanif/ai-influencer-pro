@@ -168,6 +168,8 @@ leaves the clip silent.
 
 ## A compilation: every creator is a different account
 
+The narrator's kinetic text has its own skill now: `kinetic-type` (plan / proto / build / check).
+
 When the video's claim is "these are all different people", nothing may look
 shared. Give each creator an ORDINARY caption preset (TikTok black box, one word
 at a time in heavy caps, lowercase aesthetic, serif italic, white box with dark

@@ -133,6 +133,7 @@ becomes the standard the whole series is locked into.
 | Find the real phrase boundaries in a clip (silencedetect cannot) | `scripts/beats.py` |
 | Cut the cast reel: cold open, the turn, the run, the close | `references/editing.md`, `scripts/montage.py` |
 | Build anything with structure: promo, multi-beat edit, motion graphics | `references/tesseract.md` |
+| Apple-style kinetic text on the narrator's own shots (never on the cast) | the `kinetic-type` skill |
 | Warm up the account, labels, what to measure | `references/warm-up.md` |
 | Case studies with numbers (Yang Mun, Patryczek, Cringe Boy, Mbok Geni) | `references/case-studies.md` |
 

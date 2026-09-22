@@ -1,0 +1,220 @@
+{
+ "_note": "The cards from the AI UGC promo v4 (23 Sep 2026), the version Hanif approved. Three clips, each with its own offset: A is timed in A-edit seconds after its jump cut, B and C in their source seconds.",
+ "cx": 540,
+ "y": 40,
+ "cards": [
+  {
+   "offset": 1.55,
+   "t_in": 0.47,
+   "t_out": 2.24,
+   "cx": 640,
+   "y": 1000,
+   "lines": [
+    {
+     "size": 46,
+     "t0": 0.47,
+     "t1": 1.3,
+     "words": [
+      "this",
+      "lady",
+      "is",
+      "not"
+     ]
+    },
+    {
+     "size": 124,
+     "t0": 1.3,
+     "t1": 1.64,
+     "words": [
+      "!real."
+     ]
+    }
+   ]
+  },
+  {
+   "offset": 1.55,
+   "t_in": 2.24,
+   "t_out": 3.5,
+   "cx": 640,
+   "y": 1000,
+   "lines": [
+    {
+     "size": 46,
+     "t0": 2.24,
+     "t1": 2.6,
+     "words": [
+      "I",
+      "*made*",
+      "her"
+     ]
+    },
+    {
+     "size": 112,
+     "t0": 2.6,
+     "t1": 3.24,
+     "words": [
+      "_this_",
+      "morning."
+     ]
+    }
+   ]
+  },
+  {
+   "offset": 1.55,
+   "t_in": 3.5,
+   "t_out": 6.52,
+   "cx": 640,
+   "y": 900,
+   "lines": [
+    {
+     "size": 230,
+     "t0": 3.5,
+     "t1": 3.72,
+     "words": [
+      "!30"
+     ]
+    },
+    {
+     "size": 92,
+     "t0": 3.72,
+     "t1": 4.69,
+     "words": [
+      "AI",
+      "influencers"
+     ]
+    },
+    {
+     "size": 46,
+     "t0": 4.69,
+     "t1": 5.95,
+     "words": [
+      "running",
+      "*every*",
+      "*day.*"
+     ]
+    }
+   ]
+  },
+  {
+   "offset": 19.87,
+   "t_in": 1.07,
+   "t_out": 3.61,
+   "lines": [
+    {
+     "size": 44,
+     "t0": 1.07,
+     "t1": 1.9,
+     "words": [
+      "they",
+      "are",
+      "_posting_"
+     ]
+    },
+    {
+     "size": 112,
+     "t0": 1.9,
+     "t1": 3.03,
+     "words": [
+      "!10",
+      "times",
+      "a",
+      "day"
+     ]
+    }
+   ]
+  },
+  {
+   "offset": 19.87,
+   "t_in": 3.61,
+   "t_out": 5.15,
+   "y": 44,
+   "lines": [
+    {
+     "size": 44,
+     "t0": 3.61,
+     "t1": 4.1,
+     "words": [
+      "promoting",
+      "my"
+     ]
+    },
+    {
+     "size": 104,
+     "t0": 4.1,
+     "t1": 4.99,
+     "words": [
+      "_client's_",
+      "products."
+     ]
+    }
+   ]
+  },
+  {
+   "offset": 36.0,
+   "t_in": 1.51,
+   "t_out": 4.46,
+   "lines": [
+    {
+     "size": 44,
+     "t0": 1.51,
+     "t1": 1.95,
+     "words": [
+      "none",
+      "of",
+      "them"
+     ]
+    },
+    {
+     "size": 112,
+     "t0": 1.95,
+     "t1": 2.41,
+     "words": [
+      "are",
+      "real."
+     ]
+    }
+   ]
+  },
+  {
+   "offset": 36.0,
+   "t_in": 4.46,
+   "t_out": 5.97,
+   "y": 50,
+   "lines": [
+    {
+     "size": 124,
+     "t0": 4.46,
+     "t1": 4.93,
+     "words": [
+      "_even_",
+      "me."
+     ]
+    }
+   ]
+  },
+  {
+   "offset": 36.0,
+   "t_in": 5.97,
+   "t_out": 9.25,
+   "lines": [
+    {
+     "size": 44,
+     "t0": 5.97,
+     "t1": 6.4,
+     "words": [
+      "I'm",
+      "also"
+     ]
+    },
+    {
+     "size": 112,
+     "t0": 6.4,
+     "t1": 7.15,
+     "words": [
+      "!AI-generated."
+     ]
+    }
+   ]
+  }
+ ]
+}
