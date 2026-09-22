@@ -75,6 +75,7 @@ still looks fine on screen. It also finds burned-in captions and tells you when 
 | `scripts/flow.mjs` | Playwright driver for Flow: project, image, video, batch, download |
 | `scripts/assemble.sh` | normalise + concat + case label + PART label + outro card |
 | `scripts/split-sheet.py` | cut a 4-panel sheet into front / three-quarter / back / face |
+| `templates/bulk-casting-chatgpt.md` | cast 30 varied characters from one reference in a single ChatGPT session, then bin the ones that fail the scorer |
 | `templates/bible.md`, `templates/script.md`, `templates/scene.txt`, `templates/rules.txt`, `templates/episode.json`, `templates/prompts.md` | fill-in files |
 | `example/ayu-day01.json` | a real DAY 1 plan: one scene, one rules block, three lines |
 

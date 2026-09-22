@@ -122,6 +122,7 @@ becomes the standard the whole series is locked into.
 | Understand the Flow UI, credits, models, download sizes | `references/flow-mechanics.md` |
 | Check the renders before watching them | `scripts/qc.py` |
 | Split a 4-view sheet into references (non-talking-head characters) | `scripts/split-sheet.py` |
+| Cast 30 characters at once in ChatGPT, then measure what survives | `templates/bulk-casting-chatgpt.md` |
 | Turn generated scenes into a UGC carousel | `scripts/carousel.py`, `templates/carousel.json` |
 | Stitch shots, burn labels, add the outro | `scripts/assemble.sh` |
 | Warm up the account, labels, what to measure | `references/warm-up.md` |
