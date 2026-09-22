@@ -1,6 +1,6 @@
 # Tesseract traps that bite kinetic type
 
-Full list in the `ai-influencer-pro` skill's `references/tesseract.md`. The ones that matter here:
+Full list and the editing library: the `tesseract-edit` skill (`references/traps.md`). The ones that matter here:
 
 - **Font addressing is per face.** Inter works as PostScript name + weight (`Inter28pt-ExtraBold`
   / `ExtraBold`), which `kinetic.FACES` already holds. That rule does NOT hold for every family
